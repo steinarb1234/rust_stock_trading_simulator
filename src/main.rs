@@ -2,20 +2,22 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
-// Assume an initial cash amount for the portfolio
+
 const INITIAL_CASH: f32 = 10000.0;
 
-
+#[derive(Debug)]
 struct MarketData {
     symbol: String,
     price: f32,
 }
 
+#[derive(Debug)]
 enum OrderType {
     Market,
     Limit(f32),
 }
 
+#[derive(Debug)]
 struct Order {
     symbol: String,
     quantity: i32,
@@ -44,7 +46,6 @@ impl Portfolio {
         }
     }
 
-    // Helper function to process the order
     fn process_order(&mut self, order: &Order, execution_price: f32) {
         let total_order_value = execution_price * order.quantity.abs() as f32;
 
@@ -131,20 +132,22 @@ fn main() {
             order_type: OrderType::Limit(280.0),
         },
         Order {
-            symbol: "MSFT".to_string(),
+            symbol: "AAPL".to_string(),
             quantity: -1,
             order_type: OrderType::Limit(280.0),
         },
     ];
 
     for order in orders {
+        println!("Processing order: {:?}", order);
         if let Some(market_price) = find_market_price(&market_data, &order.symbol) {
             portfolio.execute_order(&order, market_price);
         } else {
             println!("Market data not found for {}", order.symbol);
         }
+        println!("Current Holdings: {:?}", portfolio.holdings);
+        println!("Current Cash Balance: ${:.2}", portfolio.cash);
+        let profit_loss = portfolio.calculate_profit_loss(&market_data);
+        println!("Current profit or loss: ${:.2}\n", profit_loss);
     }
-
-    let profit_loss = portfolio.calculate_profit_loss(&market_data);
-    println!("Current profit or loss: ${:.2}", profit_loss);
 }
