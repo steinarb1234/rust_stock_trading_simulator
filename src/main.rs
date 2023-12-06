@@ -134,7 +134,7 @@ fn main() {
         Order {
             symbol: "AAPL".to_string(),
             quantity: -1,
-            order_type: OrderType::Limit(280.0),
+            order_type: OrderType::Market,
         },
     ];
 
